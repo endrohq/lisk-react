@@ -1,0 +1,31 @@
+{
+  "name": "@lisk-react/types",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.0.1",
+  "description": "Simple react packages for building modern Lisk dApps",
+  "author": "Endro <tom@endro.io>",
+  "keywords": [
+    "react",
+    "react-hooks",
+    "hooks",
+    "ethereum",
+    "javascript",
+    "typescript",
+    "web3",
+    "context",
+    "frontend",
+    "dapp"
+  ],
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",
+    "build": "tsc",
+    "build:check": "node -e \"require('./dist')\"",
+    "publish": "npm run build && npm publish"
+  }
+}

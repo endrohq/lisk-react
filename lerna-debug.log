@@ -1,0 +1,42 @@
+12 error Error: Command failed with exit code 129: git rev-list --count --all --max-count=1
+12 error usage: git rev-list [OPTION] <commit-id>... [ -- paths... ]
+12 error   limiting output:
+12 error     --max-count=<n>
+12 error     --max-age=<epoch>
+12 error     --min-age=<epoch>
+12 error     --sparse
+12 error     --no-merges
+12 error     --min-parents=<n>
+12 error     --no-min-parents
+12 error     --max-parents=<n>
+12 error     --no-max-parents
+12 error     --remove-empty
+12 error     --all
+12 error     --branches
+12 error     --tags
+12 error     --remotes
+12 error     --stdin
+12 error     --quiet
+12 error   ordering output:
+12 error     --topo-order
+12 error     --date-order
+12 error     --reverse
+12 error   formatting output:
+12 error     --parents
+12 error     --children
+12 error     --objects | --objects-edge
+12 error     --unpacked
+12 error     --header | --pretty
+12 error     --abbrev=<n> | --no-abbrev
+12 error     --abbrev-commit
+12 error     --left-right
+12 error     --count
+12 error   special purpose:
+12 error     --bisect
+12 error     --bisect-vars
+12 error     --bisect-all
+12 error     at makeError (/Users/tomploem/Documents/lisk/lisk-react/node_modules/execa/lib/error.js:59:11)
+12 error     at Function.module.exports.sync (/Users/tomploem/Documents/lisk/lisk-react/node_modules/execa/index.js:188:17)
+12 error     at Object.execSync (/Users/tomploem/Documents/lisk/lisk-react/node_modules/@lerna/child-process/index.js:39:16)
+12 error     at isAnythingCommitted (/Users/tomploem/Documents/lisk/lisk-react/node_modules/@lerna/version/lib/is-anything-committed.js:14:35)
+12 error     at VersionCommand.initialize (/Users/tomploem/Documents/lisk/lisk-react/node_modules/@lerna/version/index.js:111:12)

@@ -1,0 +1,31 @@
+{
+  "name": "@lisk-react/use-wallet",
+  "version": "0.0.1",
+  "description": "Simple react packages for building modern Lisk dApps",
+  "author": "Endro <tom@endro.io>",
+  "keywords": [
+    "lisk",
+    "react",
+    "react-hooks",
+    "hooks",
+    "javascript",
+    "typescript",
+    "context",
+    "frontend",
+    "dapp"
+  ],
+  "dependencies": {
+    "@hallarhq/types": "^0.1.1",
+    "@hallarhq/use-client": "^0.1.1"
+  },
+  "scripts": {
+    "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",
+    "build": "tsc",
+    "build:check": "node -e \"require('./dist')\"",
+    "publish": "npm run build && npm publish"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ]
+}

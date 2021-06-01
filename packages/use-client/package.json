@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/use-client",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Simple react packages for building modern Lisk dApps",
   "author": "Endro <tom@endro.io>",
   "keywords": [
@@ -15,7 +15,7 @@
     "dapp"
   ],
   "dependencies": {
-    "@hallarhq/types": "^0.1.1"
+    "@lisk-react/types": "^0.0.1"
   },
   "main": "dist/index.js",
   "files": [
@@ -29,5 +29,12 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/endrohq/lisk-react.git"
+  },
+  "peerDependencies": {
+    "react": ">=16.8"
   }
 }

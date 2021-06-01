@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Simple react packages for building modern Lisk dApps",
   "author": "Endro <tom@endro.io>",
   "keywords": [
@@ -27,5 +27,12 @@
     "build": "tsc",
     "build:check": "node -e \"require('./dist')\"",
     "publish": "npm run build && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/endrohq/lisk-react.git"
+  },
+  "peerDependencies": {
+    "react": ">=16.8"
   }
 }

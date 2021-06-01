@@ -1,8 +1,8 @@
 
 import React, { FC, useContext, useMemo, useState } from 'react';
 import { getAccountByPassphrase } from 'utils/account.utils';
-import { LiskAccount } from '@hallarhq/types';
-import { useLiskClient } from '@hallarhq/use-client';
+import { LiskAccount } from '@lisk-react/types';
+import { useLiskClient } from '@lisk-react/use-client';
 import accountFactory from './factory/account.factory';
 
 export interface LiskWalletContextStateProps {

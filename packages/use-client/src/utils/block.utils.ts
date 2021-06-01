@@ -1,5 +1,5 @@
 import { _arrayBufferToString } from './string.utils';
-import { Block, ModuleDictionary } from '@hallarhq/types';
+import { Block, ModuleDictionary } from '@lisk-react/types';
 
 export class ConvertedBlock {
   private _moduleDictionary: ModuleDictionary;

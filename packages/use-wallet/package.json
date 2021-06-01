@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/use-wallet",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Simple react packages for building modern Lisk dApps",
   "author": "Endro <tom@endro.io>",
   "publishConfig": {
@@ -18,8 +18,8 @@
     "dapp"
   ],
   "dependencies": {
-    "@lisk-react/types": "^0.0.1",
-    "@lisk-react/use-client": "^0.0.1"
+    "@lisk-react/types": "^0.1.0",
+    "@lisk-react/use-client": "^0.1.0"
   },
   "scripts": {
     "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",

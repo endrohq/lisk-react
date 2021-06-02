@@ -6,7 +6,7 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from 'react';
 import { apiClient } from '@liskhq/lisk-client';
 import { APIClient } from '@liskhq/lisk-api-client/dist-node/api_client';
-import { Block, LiskNetwork } from '@lisk-react/typings';
+import { Block, LiskNetwork } from '@lisk-react/types';
 import { ConvertedBlock } from 'utils/block.utils';
 import { createDefaultBlock } from 'factory/block.factory';
 

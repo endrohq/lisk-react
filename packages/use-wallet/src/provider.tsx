@@ -1,7 +1,7 @@
 
 import React, {FC, useContext, useEffect, useMemo, useState} from 'react';
 import { getAccountByPassphrase } from 'utils/account.utils';
-import { LiskAccount } from '@lisk-react/typings';
+import { LiskAccount } from '@lisk-react/types';
 import { useLiskClient } from '@lisk-react/use-client';
 import accountFactory from './factory/account.factory';
 

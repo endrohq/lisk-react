@@ -27,6 +27,7 @@ interface Props {
 }
 
 export const LiskWalletProvider: FC<Props> = ({ children }) => {
+
   const { client, block } = useLiskClient();
   const [account, setAccount] = useState<LiskAccount>();
   const [loading, setLoading] = useState<boolean>(false);

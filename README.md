@@ -22,7 +22,7 @@ function App () {
   )
 }
 ```
-#### useLiskClient
+### useLiskClient
 useLiskClient can be called from within any function component to access context variables such as `isConnected`, `setTargetNetwork` or `block`
 
 #### Example
@@ -34,8 +34,6 @@ function Component () {
   // ...
 }
 ```
-
-
 
 ## @lisk-react/use-wallet
 A react application built for the Lisk ecosystem will most likely authenticate users so that part of the application can become private vs. public. The developer will need to define a authenication methods and make sure that application can react to user changes with ease. The `useWallet()` library will abstract all of those settings into an easy to use React hook.
@@ -53,7 +51,7 @@ function App () {
 }
 ```
 
-#### useLiskWallet
+### useLiskWallet
 useLiskWallet can be called from within any function component to access context variables such as `isAuthenicated`, `authenticate`, `generateAccount` or `logout`
 
 #### Example

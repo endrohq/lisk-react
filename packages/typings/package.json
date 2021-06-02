@@ -4,7 +4,7 @@
     "access": "public"
   },
   "version": "0.0.2",
-  "description": "Simple react packages for building modern Lisk dApps",
+  "description": "Central place for the type definitions in the @lisk-react packages",
   "author": "Endro <tom@endro.io>",
   "keywords": [
     "react",
@@ -33,5 +33,6 @@
   },
   "peerDependencies": {
     "react": ">=16.8"
-  }
+  },
+  "gitHead": "3ee3ba58cf1dec047e08d164f05f1155fdf2f3cf"
 }

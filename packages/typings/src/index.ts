@@ -1,6 +1,4 @@
 export interface LiskNetwork {
-  name: string;
-  identifier: string;
   nodeUrl: string;
   wsUrl: string;
 }
@@ -121,7 +119,7 @@ export interface ReportDelegateMisbehaviour extends BaseAsset {
 }
 
 export interface BaseModule {
-  get(payload: Transaction<BaseAsset>): Transaction<BaseAsset>;
+  get(payload: Transaction<BaseAsset>);
 }
 
 export interface Transfer extends BaseAsset {

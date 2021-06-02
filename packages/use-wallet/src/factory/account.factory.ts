@@ -1,4 +1,4 @@
-import { LiskAccount } from '@lisk-react/types';
+import { LiskAccount } from '@lisk-react/typings';
 import { cryptography } from '@liskhq/lisk-client';
 import * as passphrase from '@liskhq/lisk-passphrase';
 import {_arrayBufferToString} from "utils/string.utils";

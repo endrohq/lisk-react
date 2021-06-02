@@ -1,7 +1,7 @@
 
-import React, { FC, useContext, useMemo, useState } from 'react';
+import React, {FC, useContext, useEffect, useMemo, useState} from 'react';
 import { getAccountByPassphrase } from 'utils/account.utils';
-import { LiskAccount } from '@lisk-react/types';
+import { LiskAccount } from '@lisk-react/typings';
 import { useLiskClient } from '@lisk-react/use-client';
 import accountFactory from './factory/account.factory';
 
@@ -27,9 +27,19 @@ interface Props {
 }
 
 export const LiskWalletProvider: FC<Props> = ({ children }) => {
-  const { client } = useLiskClient();
+  const { client, block } = useLiskClient();
   const [account, setAccount] = useState<LiskAccount>();
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (client && block.payload && account) {
+      const relevantTxs = block.payload
+          .filter((tx) => account?.keys?.publicKey === tx?.senderPublicKey);
+      if (Array.isArray(relevantTxs) && relevantTxs?.length > 0) {
+        updateAccount(account?.address);
+      }
+    }
+  }, [block])
 
   async function authenticate(passphrase: string): Promise<void> {
     const account = getAccountByPassphrase(passphrase);

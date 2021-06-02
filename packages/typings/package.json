@@ -1,9 +1,9 @@
 {
-  "name": "@lisk-react/types",
+  "name": "@lisk-react/typings",
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Simple react packages for building modern Lisk dApps",
   "author": "Endro <tom@endro.io>",
   "keywords": [

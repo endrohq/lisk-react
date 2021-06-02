@@ -1,6 +1,6 @@
 import { cryptography } from '@liskhq/lisk-client';
 import { _arrayBufferToString } from './string.utils';
-import { LiskAccount } from '@lisk-react/types';
+import { LiskAccount } from '@lisk-react/typings';
 
 export const getAccountByPassphrase = (passphrase: string) => {
   const keys = cryptography.getPrivateAndPublicKeyFromPassphrase(

@@ -1,4 +1,4 @@
-import { Block } from '@lisk-react/types';
+import { Block } from '@lisk-react/typings';
 
 export const createDefaultBlock = (): Block => {
   return {

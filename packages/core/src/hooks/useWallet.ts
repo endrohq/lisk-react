@@ -55,7 +55,6 @@ export function useWallet({ client, endpoint }: Props): Wallet {
         setAccount(account);
       }
     } catch (error) {
-      console.error(error);
     } finally {
       setLoading(false);
     }

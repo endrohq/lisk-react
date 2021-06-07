@@ -2,11 +2,13 @@ import React, { FC, useState, useEffect } from "react";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 import { NetworkEndpoint, Block, LiskNetwork, Wallet } from "@lisk-react/types";
 import { setupWsClient, useNetwork, useWallet } from "@lisk-react/core";
+import { LiskAccount } from "@lisk-react/types";
 
 export interface LiskContextStateProps {
   client?: APIClient;
   network: LiskNetwork;
   block: Block;
+  accounts: LiskAccount[];
   wallet: Wallet;
   setEndpoint(endpoint?: NetworkEndpoint): void;
 }
@@ -31,7 +33,10 @@ export const LiskProvider: FC<Props> = ({ endpoint, ...props }) => {
   const [client, setClient] = useState<APIClient>();
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
 
-  const { block, network } = useNetwork({ client, endpoint: networkEndpoint });
+  const { block, accounts, network } = useNetwork({
+    client,
+    endpoint: networkEndpoint,
+  });
   const wallet = useWallet({ client, endpoint: networkEndpoint });
 
   useEffect(() => {
@@ -56,6 +61,7 @@ export const LiskProvider: FC<Props> = ({ endpoint, ...props }) => {
     () => ({
       client,
       block,
+      accounts,
       network,
       wallet,
       setEndpoint,

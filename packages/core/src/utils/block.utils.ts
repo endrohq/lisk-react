@@ -1,5 +1,5 @@
-import { _arrayBufferToString } from './string.utils';
-import { Block, ModuleDictionary } from '@lisk-react/types';
+import { Block, ModuleDictionary } from "@lisk-react/types";
+import { normalize } from "./object.utils";
 
 export class ConvertedBlock {
   private _moduleDictionary: ModuleDictionary;
@@ -9,29 +9,11 @@ export class ConvertedBlock {
   }
 
   process(obj: Record<string, unknown>): Block {
-    const parsed = this.normalize(obj) as Block;
+    const parsed = normalize(obj) as Block;
     const block: Block = {
       ...parsed,
-      payload: parsed?.payload?.map(tx => this._moduleDictionary.get(tx))
+      payload: parsed?.payload?.map((tx) => this._moduleDictionary.get(tx)),
     };
-    return block;
-  }
-
-  normalize(obj: object) {
-    const block = { ...obj };
-    for (let property in block) {
-      if (block.hasOwnProperty(property)) {
-        if (block[property] instanceof Uint8Array) {
-          block[property] = _arrayBufferToString(block[property]);
-        } else if (typeof block[property] === 'bigint') {
-          block[property] = block[property]?.toString();
-        } else if (Array.isArray(block[property])) {
-          block[property] = block[property];
-        } else if (typeof block[property] === 'object') {
-          block[property] = this.normalize(block[property]);
-        }
-      }
-    }
     return block;
   }
 }

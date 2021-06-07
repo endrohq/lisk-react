@@ -3,18 +3,17 @@
  * @param {Function} effect
  * @param {Array<any>} dependencies
  */
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, useContext, useMemo, useEffect, useState } from "react";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 import { Block, LiskNetwork, NetworkEndpoint } from "@lisk-react/types";
 
-import { useNetwork } from "@lisk-react/core";
-import { useEffect } from "react";
-import { useState } from "react";
-import { setupWsClient } from "@lisk-react/core";
+import { useNetwork, setupWsClient } from "@lisk-react/core";
+import { LiskAccount } from "@lisk-react/types";
 
 export interface LiskClientContextStateProps {
   network: LiskNetwork;
   block: Block;
+  accounts: LiskAccount[];
   client?: APIClient;
 }
 
@@ -31,7 +30,7 @@ interface Props {
 
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   const [client, setClient] = useState<APIClient>();
-  const { block, network } = useNetwork({ client, endpoint });
+  const { block, accounts, network } = useNetwork({ client, endpoint });
 
   useEffect(() => {
     async function setupClient() {
@@ -47,6 +46,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
     () => ({
       network,
       block,
+      accounts,
       client,
     }),
     [client, block, network]

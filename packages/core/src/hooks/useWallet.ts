@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { getAccountByPassphrase } from "../utils/account.utils";
 import accountFactory from "../factory/account.factory";
 import { useNetwork } from "./useNetwork";
+import { useMemo } from "react";
 
 interface Props {
   client?: APIClient;
@@ -12,20 +13,18 @@ interface Props {
 }
 
 export function useWallet({ client, endpoint }: Props): Wallet {
-  const { block } = useNetwork({ client, endpoint });
+  const { accounts } = useNetwork({ client, endpoint });
   const [account, setAccount] = useState<LiskAccount>();
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (client && block.payload && account) {
-      const relevantTxs = block.payload.filter(
-        (tx) => account?.keys?.publicKey === tx?.senderPublicKey
-      );
-      if (Array.isArray(relevantTxs) && relevantTxs?.length > 0) {
-        updateAccount(account?.address);
-      }
+    const updatedAccount = accounts.find(
+      (item) => item?.address === account?.address
+    );
+    if (updatedAccount && Object.keys(updatedAccount)?.length > 0) {
+      setAccount(updatedAccount);
     }
-  }, [block]);
+  }, [accounts]);
 
   async function authenticate(passphrase: string): Promise<void> {
     const account = getAccountByPassphrase(passphrase);
@@ -50,20 +49,28 @@ export function useWallet({ client, endpoint }: Props): Wallet {
 
   async function updateAccount(address: string): Promise<void> {
     await setLoading(true);
-    if (client) {
-      const account = (await client.account.get(address)) as LiskAccount;
-      setAccount(account);
+    try {
+      if (client) {
+        const account = (await client.account.get(address)) as LiskAccount;
+        setAccount(account);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
-  return {
-    isAuthenticated: !!account,
-    authenticate,
-    logout,
-    account,
-    generate: generateAccount,
-    setAccount: setLiskAccount,
-    loading,
-  };
+  return useMemo(
+    () => ({
+      isAuthenticated: !!account,
+      authenticate,
+      logout,
+      account,
+      generate: generateAccount,
+      setAccount: setLiskAccount,
+      loading,
+    }),
+    [account, loading]
+  );
 }

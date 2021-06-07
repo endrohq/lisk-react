@@ -1,6 +1,21 @@
-export interface LiskNetwork {
-  nodeUrl: string;
+export interface NetworkEndpoint {
   wsUrl: string;
+  nodeUrl: string;
+}
+
+export interface LiskNetwork {
+  isConnected: boolean;
+  endpoint?: NetworkEndpoint;
+}
+
+export interface Wallet {
+  account?: LiskAccount;
+  isAuthenticated: boolean;
+  loading: boolean;
+  generate(): LiskAccount;
+  logout(): void;
+  setAccount(account: LiskAccount): void;
+  authenticate(passphrase: string): void;
 }
 
 export type LiskAccount = {
@@ -129,46 +144,40 @@ export interface Transfer extends BaseAsset {
 }
 
 export class TokenModule implements BaseModule {
-
-  get (payload: Transaction<BaseAsset>) {
+  get(payload: Transaction<BaseAsset>) {
     return payload as Transaction<Transfer>;
   }
-
 }
 
 export class KeysModule implements BaseModule {
-
-  get (payload: Transaction<BaseAsset>) {
+  get(payload: Transaction<BaseAsset>) {
     return payload as Transaction<RegisterMultiSignatureGroup>;
   }
-
 }
 
 export class DposModule implements BaseModule {
-
-  get (payload: Transaction<BaseAsset>) {
+  get(payload: Transaction<BaseAsset>) {
     if (payload.assetID === 0) {
-      return payload as Transaction<RegisterDelegate>
+      return payload as Transaction<RegisterDelegate>;
     } else if (payload.assetID === 1) {
-      return payload as Transaction<DelegateVote>
+      return payload as Transaction<DelegateVote>;
     } else if (payload.assetID === 2) {
-      return payload as Transaction<UnlockToken>
+      return payload as Transaction<UnlockToken>;
     } else if (payload.assetID === 3) {
-      return payload as Transaction<ReportDelegateMisbehaviour>
+      return payload as Transaction<ReportDelegateMisbehaviour>;
     }
     return payload as Transaction<BaseAsset>;
   }
-
 }
 
 export class ModuleDictionary {
   private _modules: Record<number, BaseModule> = {
     0: new TokenModule(),
     4: new KeysModule(),
-    5: new DposModule()
+    5: new DposModule(),
   };
 
-  register (moduleID: number, module: BaseModule) {
+  register(moduleID: number, module: BaseModule) {
     this._modules[moduleID] = module;
   }
 

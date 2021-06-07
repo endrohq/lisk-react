@@ -1,32 +1,36 @@
 {
-  "name": "@lisk-react/types",
+  "name": "@lisk-react/use-lisk",
+  "version": "0.0.5",
+  "description": "An easy-to-use React ContextProvider for to authenticate users in the Lisk ecosystem",
+  "author": "Endro <tom@endro.io>",
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.0.5",
-  "description": "Central place for the type definitions in the @lisk-react packages",
-  "author": "Endro <tom@endro.io>",
   "keywords": [
+    "lisk",
     "react",
     "react-hooks",
     "hooks",
-    "ethereum",
     "javascript",
     "typescript",
-    "web3",
     "context",
     "frontend",
     "dapp"
   ],
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "dependencies": {
+    "@lisk-react/types": "^0.0.5",
+    "@lisk-react/core": "^0.0.5"
+  },
   "scripts": {
     "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",
     "build": "tsc",
     "build:check": "node -e \"require('./dist')\""
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/endrohq/lisk-react.git"

@@ -1,23 +1,23 @@
 {
-  "name": "@lisk-react/use-client",
+  "name": "@lisk-react/types",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.5",
-  "description": "An easy-to-use React ContextProvider for the Lisk client library",
+  "description": "Central place for the type definitions in the @lisk-react packages",
   "author": "Endro <tom@endro.io>",
   "keywords": [
-    "lisk",
     "react",
     "react-hooks",
     "hooks",
+    "ethereum",
     "javascript",
     "typescript",
+    "web3",
     "context",
     "frontend",
     "dapp"
   ],
-  "dependencies": {
-    "@lisk-react/types": "^0.0.5",
-    "@lisk-react/core": "^0.0.5"
-  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -27,9 +27,6 @@
     "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",
     "build": "tsc",
     "build:check": "node -e \"require('./dist')\""
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "repository": {
     "type": "git",

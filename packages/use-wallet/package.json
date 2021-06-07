@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "@lisk-react/types": "^0.1.1",
-    "@lisk-react/use-client": "^0.1.1"
+    "@lisk-react/core": "^0.1.1"
   },
   "scripts": {
     "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",

@@ -1,17 +1,10 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from "react";
-import { getAccountByPassphrase } from "./utils/account.utils";
-import { LiskAccount } from "@lisk-react/types";
-import { useLiskClient } from "@lisk-react/use-client";
-import accountFactory from "./factory/account.factory";
+import { NetworkEndpoint, Wallet } from "@lisk-react/types";
+import { useWallet, setupWsClient } from "@lisk-react/core";
+import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 
-export interface LiskWalletContextStateProps {
-  isAuthenticated: boolean;
-  loading: boolean;
-  account?: LiskAccount;
-  authenticate(passphrase: string): Promise<void>;
-  logout(): void;
-  generateAccount(): LiskAccount;
-  setAccount(account: LiskAccount): void;
+export interface LiskWalletContextStateProps extends Wallet {
+  setEndpoint(endpoint?: NetworkEndpoint): void;
 }
 
 export const LiskWalletContext =
@@ -22,71 +15,40 @@ export const LiskWalletContext =
 export const useLiskWallet = () => useContext(LiskWalletContext);
 
 interface Props {
-  children: JSX.Element;
+  endpoint: NetworkEndpoint;
 }
 
-export const LiskWalletProvider: FC<Props> = ({ children }) => {
-  const { client, block } = useLiskClient();
-  const [account, setAccount] = useState<LiskAccount>();
-  const [loading, setLoading] = useState<boolean>(false);
+export const LiskWalletProvider: FC<Props> = ({ endpoint, ...props }) => {
+  const [client, setClient] = useState<APIClient>();
+  const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
+
+  const wallet = useWallet({ client, endpoint });
 
   useEffect(() => {
-    if (client && block.payload && account) {
-      const relevantTxs = block.payload.filter(
-        (tx) => account?.keys?.publicKey === tx?.senderPublicKey
-      );
-      if (Array.isArray(relevantTxs) && relevantTxs?.length > 0) {
-        updateAccount(account?.address);
+    async function setupClient() {
+      if (endpoint?.nodeUrl) {
+        const wsClient = await setupWsClient(endpoint.wsUrl);
+        setClient(wsClient);
       }
     }
-  }, [block]);
+    setupClient();
+    return () => {
+      client?.disconnect();
+      setClient(undefined);
+    };
+  }, [networkEndpoint]);
 
-  async function authenticate(passphrase: string): Promise<void> {
-    const account = getAccountByPassphrase(passphrase);
-    if (client && account !== null && Object.keys(account).length > 0) {
-      updateAccount(account?.address);
-    } else {
-      setAccount(account);
-    }
-  }
-
-  function setLiskAccount(account: LiskAccount) {
-    setAccount(account);
-  }
-
-  function logout() {
-    setAccount(undefined);
-  }
-
-  function generateAccount() {
-    return accountFactory.create();
-  }
-
-  async function updateAccount(address: string): Promise<void> {
-    await setLoading(true);
-    if (client) {
-      const account = (await client.account.get(address)) as LiskAccount;
-      setAccount(account);
-    }
-    setLoading(false);
+  function setEndpoint(endpoint: NetworkEndpoint) {
+    setNetworkEndpoint(endpoint);
   }
 
   const value = useMemo(
     () => ({
-      isAuthenticated: !!account,
-      authenticate,
-      logout,
-      account,
-      generateAccount,
-      setAccount: setLiskAccount,
-      loading,
+      ...wallet,
+      setEndpoint,
     }),
-    [account, loading]
+    [endpoint]
   );
 
-  return (
-    <LiskWalletContext.Provider value={value}>
-      {children}
-    </LiskWalletContext.Provider>
-  );
+  return <LiskWalletContext.Provider value={value} {...props} />;
 };

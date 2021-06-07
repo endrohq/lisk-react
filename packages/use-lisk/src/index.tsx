@@ -71,7 +71,7 @@ export const LiskProvider: FC<Props> = ({ endpoint, ...props }) => {
       wallet,
       setEndpoint,
     }),
-    [client, network]
+    [network?.isConnected, wallet?.account]
   );
 
   return <LiskContext.Provider value={value} {...props} />;

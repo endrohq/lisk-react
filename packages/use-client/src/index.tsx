@@ -31,16 +31,11 @@ interface Props {
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
 
-  const { client } = useMemo(() => {
-    return useClient({ endpoint: networkEndpoint });
-  }, [networkEndpoint]);
-
-  const { block, accounts, network } = useMemo(() => {
-    return useNetwork({
-      client,
-      endpoint: networkEndpoint,
-    });
-  }, [networkEndpoint]);
+  const { client } = useClient({ endpoint: networkEndpoint });
+  const { block, accounts, network } = useNetwork({
+    client,
+    endpoint: networkEndpoint,
+  });
 
   useEffect(() => {
     if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);

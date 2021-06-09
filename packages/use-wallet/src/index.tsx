@@ -20,13 +20,8 @@ interface Props {
 export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
 
-  const { client } = useMemo(() => {
-    return useClient({ endpoint: networkEndpoint });
-  }, [networkEndpoint]);
-
-  const wallet = useMemo(() => {
-    return useWallet({ client, endpoint: networkEndpoint });
-  }, [client]);
+  const { client } = useClient({ endpoint: networkEndpoint });
+  const wallet = useWallet({ client, endpoint: networkEndpoint });
 
   useEffect(() => {
     if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);

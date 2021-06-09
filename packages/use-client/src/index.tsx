@@ -25,7 +25,7 @@ export const LiskClientContext =
 export const useLiskClient = () => useContext(LiskClientContext);
 
 interface Props {
-  endpoint: NetworkEndpoint;
+  endpoint?: NetworkEndpoint;
 }
 
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {

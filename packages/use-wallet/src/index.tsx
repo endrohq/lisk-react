@@ -15,7 +15,7 @@ export const LiskWalletContext =
 export const useLiskWallet = () => useContext(LiskWalletContext);
 
 interface Props {
-  endpoint: NetworkEndpoint;
+  endpoint?: NetworkEndpoint;
 }
 
 export const LiskWalletProvider: FC<Props> = ({ endpoint, ...props }) => {

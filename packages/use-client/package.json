@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/use-client",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "An easy-to-use React ContextProvider for the Lisk client library",
   "author": "Endro <tom@endro.io>",
   "keywords": [
@@ -15,7 +15,7 @@
     "dapp"
   ],
   "dependencies": {
-    "@lisk-react/core": "^0.2.1",
+    "@lisk-react/core": "^0.2.4",
     "@lisk-react/types": "^0.2.0"
   },
   "main": "dist/index.js",

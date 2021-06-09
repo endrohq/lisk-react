@@ -7,7 +7,7 @@ import React, { FC, useContext, useMemo, useEffect, useState } from "react";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 import { Block, LiskNetwork, NetworkEndpoint } from "@lisk-react/types";
 
-import { useNetwork, setupWsClient } from "@lisk-react/core";
+import { useNetwork, useClient } from "@lisk-react/core";
 import { LiskAccount } from "@lisk-react/types";
 
 export interface LiskClientContextStateProps {
@@ -29,17 +29,21 @@ interface Props {
 }
 
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
-  const [client, setClient] = useState<APIClient>();
-  const { block, accounts, network } = useNetwork({ client, endpoint });
+  const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
+
+  const { client } = useMemo(() => {
+    return useClient({ endpoint: networkEndpoint });
+  }, [networkEndpoint]);
+
+  const { block, accounts, network } = useMemo(() => {
+    return useNetwork({
+      client,
+      endpoint: networkEndpoint,
+    });
+  }, [networkEndpoint]);
 
   useEffect(() => {
-    async function setupClient() {
-      if (endpoint?.nodeUrl) {
-        const wsClient = await setupWsClient(endpoint.wsUrl);
-        setClient(wsClient);
-      }
-    }
-    setupClient();
+    if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);
   }, [endpoint]);
 
   const value = useMemo(
@@ -48,6 +52,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
       block,
       accounts,
       client,
+      setEndpoint: (endpoint: NetworkEndpoint) => setNetworkEndpoint(endpoint),
     }),
     [client, block, network]
   );

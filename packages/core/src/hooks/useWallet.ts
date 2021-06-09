@@ -28,7 +28,8 @@ export function useWallet({ client, endpoint }: Props): Wallet {
 
   async function authenticate(passphrase: string): Promise<void> {
     const account = getAccountByPassphrase(passphrase);
-    if (client && account !== null && Object.keys(account).length > 0) {
+    if (!account) return;
+    if (client && account?.address) {
       updateAccount(account?.address);
     } else {
       setAccount(account);

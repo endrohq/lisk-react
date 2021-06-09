@@ -7,7 +7,7 @@ import React, { FC, useContext, useMemo, useEffect, useState } from "react";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 import { Block, LiskNetwork, NetworkEndpoint } from "@lisk-react/types";
 
-import { useNetwork, useClient } from "@lisk-react/core";
+import { useNetwork } from "@lisk-react/core";
 import { LiskAccount } from "@lisk-react/types";
 
 export interface LiskClientContextStateProps {
@@ -31,9 +31,7 @@ interface Props {
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
 
-  const { client } = useClient({ endpoint: networkEndpoint });
-  const { block, accounts, network } = useNetwork({
-    client,
+  const { block, accounts, network, client } = useNetwork({
     endpoint: networkEndpoint,
   });
 
@@ -49,7 +47,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
       client,
       setEndpoint: (endpoint: NetworkEndpoint) => setNetworkEndpoint(endpoint),
     }),
-    [client, block, network]
+    [block, network]
   );
 
   return (

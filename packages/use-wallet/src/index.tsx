@@ -23,7 +23,7 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
 
   const { client } = useClient({ endpoint: networkEndpoint });
-  const { accounts } = useNetwork({ client, endpoint });
+  const { accounts } = useNetwork({ endpoint });
 
   const [account, setAccount] = useState<LiskAccount>();
   const [loading, setLoading] = useState<boolean>(false);

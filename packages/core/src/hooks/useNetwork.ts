@@ -1,21 +1,19 @@
-import { useMemo, useState } from "react";
-import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
+import { useMemo, useState, useEffect } from "react";
 import { ConvertedBlock } from "../utils/block.utils";
 import { zeroHeightBlock } from "../factory/block.factory";
-import { NetworkEndpoint, Block } from "@lisk-react/types";
-import { useEffect } from "react";
-import { LiskAccount } from "@lisk-react/types";
+import { NetworkEndpoint, Block, LiskAccount } from "@lisk-react/types";
 import { normalize } from "../utils/object.utils";
+import { useClient } from "./useClient";
 
 interface Props {
-  client?: APIClient;
   endpoint?: NetworkEndpoint;
 }
 
-export function useNetwork({ client, endpoint }: Props) {
+export function useNetwork({ endpoint }: Props) {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [block, setBlock] = useState<Block>(zeroHeightBlock);
   const [accounts, setAccounts] = useState<LiskAccount[]>([]);
+  const { client } = useClient({ endpoint });
 
   const blockConverter = useMemo(() => {
     return new ConvertedBlock();
@@ -53,6 +51,7 @@ export function useNetwork({ client, endpoint }: Props) {
         isConnected,
         endpoint,
       },
+      client,
     }),
     [block, isConnected]
   );

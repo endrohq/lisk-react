@@ -2,12 +2,16 @@
 
 Simple react packages for building modern [Lisk dApps](https://lisk.com/docs/)
 
-## @lisk-react/use-client
-A react application built for the Lisk ecosystem will most likely listen to blockchain changes such as new blocks, set active connections, .. The developer will need to define a websocket listener, decode new blocks and needs to make sure that the application can change with those new blocks. The `useClient()` library will abstract all of those settings into an easy to use React hook.
+## @lisk-react/use-lisk
+A react application built for the Lisk ecosystem will most likely use the following features:
+- listen to blockchain changes such as (new blocks, active connections)
+- Authenticate a user wallet for accessing private routes
+
+For that, we introduce a global Lisk Context Provider:
 
 #### Example
 ```javascript
-import { LiskClientProvider } from '@lisk-react/use-client'
+import { LiskProvider } from '@lisk-react/use-lisk'
 
 const targetNetwork = {
     nodeUrl: 'http://localhost:4000',
@@ -16,25 +20,68 @@ const targetNetwork = {
 
 function App () {
   return (
-    <LiskClientProvider targetNetwork={targetNetwork}>
+    <LiskProvider targetNetwork={targetNetwork}>
       {/* <...> */}
-    </LiskClientProvider>
+    </LiskProvider>
   )
 }
 ```
+LiskProvider brings you out of the box websocket connection, a wallet to authenticate the user and an up-to-date LiskAPIClient with all of the components listening to your given endpoints at the start.
+
 ### useLiskClient
 useLiskClient can be called from within any function component to access context variables such as `isConnected`, `setTargetNetwork` or `block`
 
 #### Example
 ```javascript
-import { useLiskClient } from '@lisk-react/use-client'
+import { useLiskClient } from '@lisk-react/use-lisk'
 
 function Component () {
-  const { block, isConnected } = useLiskClient()
+  const { block, accounts, network: { isConnected, endpoint } } = useLiskClient()
   // ...
 }
 ```
 
+The hook returns to the following interface:
+
+```typescript
+interface UseLiskClientProps {
+  block: Block // The latest decoded block produced by the blockchain
+  accounts: LiskAccount[] // All decoded accounts involved in the last block
+  network?: {
+      isConnected: boolean // Indicator if LiskProvider is connected with the blockchain
+      endpoint: { // Your given endpoints to LiskProvider
+          wsUrl: string
+          nodeUrl: string
+      }
+  }
+}
+```
+### useLiskWallet
+useLiskWallet can be called from within any function component to access context variables such as `isAuthenicated`, `authenticate`, `generateAccount` or `logout`
+
+#### Example
+```javascript
+import { useLiskWallet } from '@lisk-react/use-wallet'
+
+function Component () {
+  const { authenticate, isAuthenicated } = useLiskWallet()
+  // ...
+}
+```
+
+The hook returns to the following interface:
+
+```typescript
+interface UseLiskWalletProps {
+    account?: LiskAccount; // An up-to-date account when authenticated
+    isAuthenticated: boolean; // indicator if the user is authenticated
+    loading: boolean; // A state transition between authenticating and fetching the blockchain state
+    generate(): LiskAccount; // A function that generate a random account
+    logout(): void; // A reset function for the wallet
+    setAccount(account: LiskAccount): void; // Persisting a generated account in the wallet
+    authenticate(passphrase: string): void; // Authenticating the user via a given passphrase
+}
+```
 ## @lisk-react/use-wallet
 A react application built for the Lisk ecosystem will most likely authenticate users so that part of the application can become private vs. public. The developer will need to define a authenication methods and make sure that application can react to user changes with ease. The `useWallet()` library will abstract all of those settings into an easy to use React hook.
 
@@ -61,21 +108,5 @@ import { useLiskWallet } from '@lisk-react/use-wallet'
 function Component () {
   const { authenticate, isAuthenicated } = useLiskWallet()
   // ...
-}
-```
-A neat feature of `useLiskWallet` is that we use `useLiskClient` internally if there is an active connection. If used correctly, our `LiskWalletProvider` will make sure that the account object is in sync with the blockchain state.
-#### Example
-```javascript
-import { LiskClientProvider } from '@lisk-react/use-client'
-import { LiskWalletProvider } from '@lisk-react/use-wallet'
-
-function App () {
-  return (
-    <LiskClientProvider>
-        <LiskWalletProvider>
-            {/* <...> */}
-        </LiskWalletProvider>
-    </LiskClientProvider>
-  )
 }
 ```

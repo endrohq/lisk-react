@@ -50,10 +50,11 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
 
   useEffect(() => {
     if (client && !subscribed) {
-      client.subscribe("app:network:ready", () => setIsConnected(true));
       client.subscribe("app:shutdown", () => setIsConnected(false));
-
       client.subscribe("app:block:new", ({ block, accounts }: any) => {
+        if (!isConnected) {
+          setIsConnected(true);
+        }
         // Decode block
         const decodedBlock = client.block.decode(block);
         const convertedBlock = blockConverter.process(decodedBlock);

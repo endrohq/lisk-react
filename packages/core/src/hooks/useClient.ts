@@ -1,6 +1,6 @@
 import { NetworkEndpoint } from "@lisk-react/types";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { setupWsClient } from "../client";
 
 interface Props {

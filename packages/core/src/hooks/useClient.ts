@@ -33,5 +33,5 @@ export function useClient({ endpoint }: Props) {
     };
   }, [networkEndpoint]);
 
-  return useMemo(() => ({ client }), [endpoint, client]);
+  return { client };
 }

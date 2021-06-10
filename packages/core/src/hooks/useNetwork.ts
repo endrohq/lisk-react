@@ -11,8 +11,8 @@ interface Props {
 
 export function useNetwork({ endpoint }: Props) {
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [block, setBlock] = useState<Block>(zeroHeightBlock);
-  const [accounts, setAccounts] = useState<LiskAccount[]>([]);
+  const [block, setBlock] =
+    useState<{ block: Block; accounts: LiskAccount[] }>(zeroHeightBlock);
   const { client } = useClient({ endpoint });
 
   const blockConverter = useMemo(() => {
@@ -29,30 +29,26 @@ export function useNetwork({ endpoint }: Props) {
           // Decode block
           const decodedBlock = client.block.decode(block);
           const convertedBlock = blockConverter.process(decodedBlock);
-          setBlock(convertedBlock);
 
           // Decode related accounts
           const convertedAccounts = accounts?.map((item) => {
             const decodedAccount = client.account.decode(item);
             return normalize(decodedAccount);
           });
-          setAccounts(convertedAccounts);
+          setBlock({ block: convertedBlock, accounts: convertedAccounts });
         });
       }
     }
     setupSubscriptions();
   }, [client]);
 
-  return useMemo(
-    () => ({
-      block,
-      accounts,
-      network: {
-        isConnected,
-        endpoint,
-      },
-      client,
-    }),
-    [block, isConnected]
-  );
+  return {
+    block: block.block,
+    accounts: block.accounts,
+    network: {
+      isConnected,
+      endpoint,
+    },
+    client,
+  };
 }

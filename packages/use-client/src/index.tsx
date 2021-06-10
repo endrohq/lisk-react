@@ -5,10 +5,18 @@
  */
 import React, { FC, useContext, useMemo, useEffect, useState } from "react";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
-import { Block, LiskNetwork, NetworkEndpoint } from "@lisk-react/types";
-
-import { useNetwork } from "@lisk-react/core";
-import { LiskAccount } from "@lisk-react/types";
+import {
+  Block,
+  LiskNetwork,
+  NetworkEndpoint,
+  LiskAccount,
+} from "@lisk-react/types";
+import {
+  useClient,
+  zeroHeightBlock,
+  normalize,
+  ConvertedBlock,
+} from "@lisk-react/core";
 
 export interface LiskClientContextStateProps {
   network: LiskNetwork;
@@ -30,10 +38,34 @@ interface Props {
 
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [block, setBlock] =
+    useState<{ block: Block; accounts: LiskAccount[] }>(zeroHeightBlock);
+  const { client } = useClient({ endpoint: networkEndpoint });
 
-  const { block, accounts, network, client } = useNetwork({
-    endpoint: networkEndpoint,
-  });
+  const blockConverter = useMemo(() => {
+    return new ConvertedBlock();
+  }, []);
+
+  useEffect(() => {
+    if (client) {
+      client.subscribe("app:network:ready", () => setIsConnected(true));
+      client.subscribe("app:shutdown", () => setIsConnected(false));
+
+      client.subscribe("app:block:new", ({ block, accounts }: any) => {
+        // Decode block
+        const decodedBlock = client.block.decode(block);
+        const convertedBlock = blockConverter.process(decodedBlock);
+
+        // Decode related accounts
+        const convertedAccounts = accounts?.map((item) => {
+          const decodedAccount = client.account.decode(item);
+          return normalize(decodedAccount);
+        });
+        setBlock({ block: convertedBlock, accounts: convertedAccounts });
+      });
+    }
+  }, [client]);
 
   useEffect(() => {
     if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);
@@ -41,13 +73,16 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
 
   const value = useMemo(
     () => ({
-      network,
-      block,
-      accounts,
+      block: block.block,
+      accounts: block.accounts,
+      network: {
+        isConnected,
+        endpoint,
+      },
       client,
       setEndpoint: (endpoint: NetworkEndpoint) => setNetworkEndpoint(endpoint),
     }),
-    [block, network]
+    [block, isConnected]
   );
 
   return (

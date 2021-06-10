@@ -1,8 +1,11 @@
 import React, { FC, useContext, useEffect, useMemo, useState } from "react";
 import { LiskAccount, NetworkEndpoint, Wallet } from "@lisk-react/types";
-import { useClient, useNetwork } from "@lisk-react/core";
-import { getAccountByPassphrase } from "@lisk-react/core/dist/utils/account.utils";
-import accountFactory from "@lisk-react/core/dist/factory/account.factory";
+import {
+  useClient,
+  normalize,
+  createAccount,
+  getAccountByPassphrase,
+} from "@lisk-react/core";
 
 export interface LiskWalletContextStateProps extends Wallet {
   setEndpoint(endpoint?: NetworkEndpoint): void;
@@ -21,9 +24,7 @@ interface Props {
 
 export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
-
   const { client } = useClient({ endpoint: networkEndpoint });
-  const { accounts } = useNetwork({ endpoint });
 
   const [account, setAccount] = useState<LiskAccount>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,13 +34,22 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
   }, [endpoint]);
 
   useEffect(() => {
-    const updatedAccount = accounts.find(
-      (item) => item?.address === account?.address
-    );
-    if (updatedAccount && Object.keys(updatedAccount)?.length > 0) {
-      setAccount(updatedAccount);
+    if (client) {
+      client.subscribe("app:block:new", ({ accounts }: any) => {
+        // Decode related accounts
+        const convertedAccounts = accounts?.map((item) => {
+          const decodedAccount = client.account.decode(item);
+          return normalize(decodedAccount);
+        });
+        const updatedAccount = convertedAccounts.find(
+          (item) => item?.address === account?.address
+        );
+        if (updatedAccount && Object.keys(updatedAccount)?.length > 0) {
+          setAccount(updatedAccount);
+        }
+      });
     }
-  }, [accounts]);
+  }, [client]);
 
   async function authenticate(passphrase: string): Promise<void> {
     const account = getAccountByPassphrase(passphrase);
@@ -74,7 +84,7 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
       authenticate,
       logout,
       account,
-      generate: () => accountFactory.create(),
+      generate: () => createAccount(),
       setAccount: (account: LiskAccount) => setAccount(account),
       loading,
       setEndpoint: (endpoint: NetworkEndpoint) => setNetworkEndpoint(endpoint),

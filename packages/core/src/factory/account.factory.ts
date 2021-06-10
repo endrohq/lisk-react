@@ -37,7 +37,3 @@ export function createAccount(): LiskAccount {
     },
   };
 }
-
-export default {
-  create: createAccount,
-};

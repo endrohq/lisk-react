@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/core",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "The core library behind lisk-react",
   "author": "Endro <tom@endro.io>",
   "keywords": [

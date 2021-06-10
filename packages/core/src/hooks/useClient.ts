@@ -9,11 +9,6 @@ interface Props {
 
 export function useClient({ endpoint }: Props) {
   const [client, setClient] = useState<APIClient>();
-  const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
-
-  useEffect(() => {
-    if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);
-  }, []);
 
   useEffect(() => {
     async function setupClient() {
@@ -31,7 +26,7 @@ export function useClient({ endpoint }: Props) {
       client?.disconnect();
       setClient(undefined);
     };
-  }, [networkEndpoint]);
+  }, [endpoint]);
 
   return { client };
 }

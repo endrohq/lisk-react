@@ -39,6 +39,7 @@ interface Props {
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
   const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [subscribed, setSubscribed] = useState<boolean>(false);
   const [block, setBlock] =
     useState<{ block: Block; accounts: LiskAccount[] }>(zeroHeightBlock);
   const { client } = useClient({ endpoint: networkEndpoint });
@@ -48,7 +49,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   }, []);
 
   useEffect(() => {
-    if (client) {
+    if (client && !subscribed) {
       client.subscribe("app:network:ready", () => setIsConnected(true));
       client.subscribe("app:shutdown", () => setIsConnected(false));
 
@@ -64,6 +65,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
         });
         setBlock({ block: convertedBlock, accounts: convertedAccounts });
       });
+      setSubscribed(true);
     }
   }, [client]);
 

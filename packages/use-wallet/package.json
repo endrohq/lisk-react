@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/use-wallet",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "An easy-to-use React ContextProvider for to authenticate users in the Lisk ecosystem",
   "author": "Endro <tom@endro.io>",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "dapp"
   ],
   "dependencies": {
-    "@lisk-react/core": "^0.2.8",
+    "@lisk-react/core": "^0.2.9",
     "@lisk-react/types": "^0.2.0"
   },
   "scripts": {

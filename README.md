@@ -61,7 +61,7 @@ useLiskWallet can be called from within any function component to access context
 
 #### Example
 ```javascript
-import { useLiskWallet } from '@lisk-react/use-wallet'
+import { useLiskWallet } from '@lisk-react/use-lisk'
 
 function Component () {
   const { authenticate, isAuthenicated } = useLiskWallet()

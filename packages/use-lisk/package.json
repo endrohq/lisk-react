@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/use-lisk",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "An easy-to-use React ContextProvider for to authenticate users in the Lisk ecosystem",
   "author": "Endro <tom@endro.io>",
   "publishConfig": {
@@ -20,7 +20,7 @@
   "dependencies": {
     "@lisk-react/core": "^0.3.0",
     "@lisk-react/types": "^0.3.0",
-    "@lisk-react/use-client": "^0.3.0",
+    "@lisk-react/use-client": "^0.3.1",
     "@lisk-react/use-wallet": "^0.3.0"
   },
   "scripts": {

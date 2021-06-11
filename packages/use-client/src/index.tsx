@@ -49,26 +49,47 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   }, []);
 
   useEffect(() => {
-    if (client && !subscribed) {
-      client.subscribe("app:shutdown", () => setIsConnected(false));
-      client.subscribe("app:block:new", ({ block, accounts }: any) => {
-        if (!isConnected) {
-          setIsConnected(true);
-        }
-        // Decode block
-        const decodedBlock = client.block.decode(block);
-        const convertedBlock = blockConverter.process(decodedBlock);
-
-        // Decode related accounts
-        const convertedAccounts = accounts?.map((item) => {
-          const decodedAccount = client.account.decode(item);
-          return normalize(decodedAccount);
-        });
-        setBlock({ block: convertedBlock, accounts: convertedAccounts });
-      });
-      setSubscribed(true);
+    async function fetchOnClientInit() {
+      if (client && !subscribed) {
+        await fetchLatestBlock();
+        client.subscribe("app:shutdown", () => setIsConnected(false));
+        client.subscribe("app:block:new", persistNewBlock);
+        setSubscribed(true);
+      }
     }
+    fetchOnClientInit();
   }, [client]);
+
+  async function fetchLatestBlock() {
+    try {
+      if (!client) return;
+      const block = (await client?.invoke("app:getLastBlock")) as string;
+      if (!block) return;
+      // Decode block
+      const decodedBlock = client.block.decode(block);
+      const convertedBlock = blockConverter.process(decodedBlock);
+      setIsConnected(true);
+      setBlock({ block: convertedBlock, accounts: [] });
+    } catch (error) {}
+  }
+
+  function persistNewBlock({ block, accounts }: any) {
+    if (!client) return;
+
+    if (!isConnected) {
+      setIsConnected(true);
+    }
+    // Decode block
+    const decodedBlock = client.block.decode(block);
+    const convertedBlock = blockConverter.process(decodedBlock);
+
+    // Decode related accounts
+    const convertedAccounts = accounts?.map((item) => {
+      const decodedAccount = client.account.decode(item);
+      return normalize(decodedAccount);
+    });
+    setBlock({ block: convertedBlock, accounts: convertedAccounts });
+  }
 
   useEffect(() => {
     if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);

@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Central place for the type definitions in the @lisk-react packages",
   "author": "Endro <tom@endro.io>",
   "keywords": [

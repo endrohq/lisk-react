@@ -55,7 +55,7 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
     const account = getAccountByPassphrase(passphrase);
     if (!account) return;
     if (client && account?.address) {
-      updateAccount(account?.address);
+      updateAccount(account?.address, passphrase);
     } else {
       setAccount(account);
     }
@@ -65,12 +65,16 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
     setAccount(undefined);
   }
 
-  async function updateAccount(address: string): Promise<void> {
+  async function updateAccount(
+    address: string,
+    passphrase: string
+  ): Promise<void> {
     await setLoading(true);
     try {
       if (client) {
         const account = await client.account.get(address);
         const normalizedAccount = normalize(account) as LiskAccount;
+        normalizedAccount.passphrase = passphrase;
         setAccount(normalizedAccount);
       }
     } catch (error) {

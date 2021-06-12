@@ -89,7 +89,7 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
       loading,
       setEndpoint: (endpoint: NetworkEndpoint) => setNetworkEndpoint(endpoint),
     }),
-    [endpoint, loading, account]
+    [endpoint, loading, account, client]
   );
 
   return (

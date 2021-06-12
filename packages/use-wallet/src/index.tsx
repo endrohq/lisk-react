@@ -69,8 +69,9 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
     await setLoading(true);
     try {
       if (client) {
-        const account = (await client.account.get(address)) as LiskAccount;
-        setAccount(account);
+        const account = await client.account.get(address);
+        const normalizedAccount = normalize(account) as LiskAccount;
+        setAccount(normalizedAccount);
       }
     } catch (error) {
     } finally {

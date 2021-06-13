@@ -71,16 +71,17 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
     passphrase: string
   ): Promise<void> {
     await setLoading(true);
+    let account;
     try {
       if (client) {
-        const account = await client.account.get(address);
-        const normalizedAccount = normalizeAccount(account, passphrase);
-        setAccount(normalizedAccount);
+        account = await client.account.get(address);
       }
     } catch (error) {
-    } finally {
-      setLoading(false);
+      account = getAccountByPassphrase(passphrase);
     }
+    const normalizedAccount = normalizeAccount(account, passphrase);
+    setAccount(normalizedAccount);
+    setLoading(false);
   }
 
   const value = useMemo(

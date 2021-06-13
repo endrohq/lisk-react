@@ -3,6 +3,7 @@ import { LiskAccount, NetworkEndpoint, Wallet } from "@lisk-react/types";
 import {
   useClient,
   normalize,
+  normalizeAccount,
   createAccount,
   getAccountByPassphrase,
 } from "@lisk-react/core";
@@ -73,8 +74,7 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
     try {
       if (client) {
         const account = await client.account.get(address);
-        const normalizedAccount = normalize(account) as LiskAccount;
-        normalizedAccount.passphrase = passphrase;
+        const normalizedAccount = normalizeAccount(account, passphrase);
         setAccount(normalizedAccount);
       }
     } catch (error) {

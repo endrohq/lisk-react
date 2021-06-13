@@ -15,7 +15,8 @@
     "dapp"
   ],
   "dependencies": {
-    "@lisk-react/types": "^0.4.0"
+    "@lisk-react/types": "^0.4.0",
+    "bignumber.js": "^9.0.1"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

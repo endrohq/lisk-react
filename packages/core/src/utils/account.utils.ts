@@ -2,6 +2,7 @@ import { cryptography } from "@liskhq/lisk-client";
 import { _arrayBufferToString } from "./string.utils";
 import { normalize } from "./object.utils";
 import { LiskAccount } from "@lisk-react/types";
+import { fromRawLsk } from "./valuta.utils";
 
 export const getAccountByPassphrase = (passphrase: string) => {
   const keys = createKeysByPassphrase(passphrase);
@@ -26,6 +27,9 @@ export const normalizeAccount = (
 ): LiskAccount => {
   const account = normalize(input) as LiskAccount;
   account.keys = createKeysByPassphrase(passphrase);
+  account.token = {
+    balance: fromRawLsk(Number(account.token?.balance)),
+  };
   account.passphrase = passphrase;
   return account;
 };

@@ -11,12 +11,7 @@ import {
   NetworkEndpoint,
   LiskAccount,
 } from "@lisk-react/types";
-import {
-  useClient,
-  zeroHeightBlock,
-  normalize,
-  ConvertedBlock,
-} from "@lisk-react/core";
+import { useClient, zeroHeightBlock, normalize } from "@lisk-react/core";
 
 export interface LiskClientContextStateProps {
   network: LiskNetwork;
@@ -44,10 +39,6 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
     useState<{ block: Block; accounts: LiskAccount[] }>(zeroHeightBlock);
   const { client } = useClient({ endpoint: networkEndpoint });
 
-  const blockConverter = useMemo(() => {
-    return new ConvertedBlock();
-  }, []);
-
   useEffect(() => {
     async function fetchOnClientInit() {
       if (client && !subscribed) {
@@ -67,7 +58,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
       if (!block) return;
       // Decode block
       const decodedBlock = client.block.decode(block);
-      const convertedBlock = blockConverter.process(decodedBlock);
+      const convertedBlock = normalize(decodedBlock) as Block;
       setIsConnected(true);
       setBlock({ block: convertedBlock, accounts: [] });
     } catch (error) {}
@@ -81,7 +72,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
     }
     // Decode block
     const decodedBlock = client.block.decode(block);
-    const convertedBlock = blockConverter.process(decodedBlock);
+    const convertedBlock = normalize(decodedBlock) as Block;
 
     // Decode related accounts
     const convertedAccounts = accounts?.map((item) => {

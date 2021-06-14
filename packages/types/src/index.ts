@@ -8,14 +8,18 @@ export interface LiskNetwork {
   endpoint?: NetworkEndpoint;
 }
 
+export enum WalletType {
+  LOCAL = "LOCAL",
+  BLOCKCHAIN = "BLOCKCHAIN",
+}
+
 export interface Wallet {
   account?: LiskAccount;
   isAuthenticated: boolean;
-  loading: boolean;
   generate(): LiskAccount;
   logout(): void;
-  setAccount(account: LiskAccount): void;
   authenticate(passphrase: string): void;
+  walletType: WalletType;
 }
 
 export type LiskAccount = {

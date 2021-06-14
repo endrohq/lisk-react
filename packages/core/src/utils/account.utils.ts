@@ -14,6 +14,9 @@ export const getAccountByPassphrase = (passphrase: string) => {
     address,
     passphrase: passphrase,
     keys,
+    sequence: {
+      nonce: "0",
+    },
     token: {
       balance: "0",
     },
@@ -23,14 +26,16 @@ export const getAccountByPassphrase = (passphrase: string) => {
 
 export const normalizeAccount = (
   input: object,
-  passphrase: string
+  passphrase?: string
 ): LiskAccount => {
   const account = normalize(input) as LiskAccount;
   account.keys = createKeysByPassphrase(passphrase);
   account.token = {
     balance: fromRawLsk(Number(account.token?.balance)),
   };
-  account.passphrase = passphrase;
+  if (passphrase) {
+    account.passphrase = passphrase;
+  }
   return account;
 };
 

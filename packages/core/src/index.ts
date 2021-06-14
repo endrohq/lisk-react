@@ -1,7 +1,6 @@
 export { Api } from "./api/index";
 export { useClient } from "./hooks/useClient";
 export { setupWsClient } from "./client";
-export { ConvertedBlock } from "./utils/block.utils";
 export { normalize } from "./utils/object.utils";
 export {
   getAccountByPassphrase,

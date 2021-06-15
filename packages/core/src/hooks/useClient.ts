@@ -11,16 +11,6 @@ export function useClient({ endpoint }: Props) {
   const [client, setClient] = useState<APIClient>();
 
   useEffect(() => {
-    async function setupClient() {
-      try {
-        if (endpoint?.wsUrl) {
-          const wsClient = await setupWsClient(endpoint.wsUrl);
-          setClient(wsClient);
-        }
-      } catch (error) {
-        console.warn("Lisk client can't connect with the given endpoint");
-      }
-    }
     setupClient();
     return () => {
       client?.disconnect();
@@ -28,5 +18,21 @@ export function useClient({ endpoint }: Props) {
     };
   }, [endpoint]);
 
-  return { client };
+  async function setupClient() {
+    try {
+      if (endpoint?.wsUrl) {
+        const wsClient = await setupWsClient(endpoint.wsUrl);
+        setClient(wsClient);
+      }
+    } catch (error) {
+      console.warn("Lisk client can't connect with the given endpoint");
+    }
+  }
+
+  function reInitializeClient() {
+    client?.disconnect();
+    setupClient();
+  }
+
+  return { client, reInitializeClient };
 }

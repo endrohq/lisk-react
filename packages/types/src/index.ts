@@ -77,6 +77,7 @@ export type Transaction<T> = {
   moduleID: number;
   assetID: number;
   nonce: number;
+  id: string;
   fee: number;
   senderPublicKey: any;
   signatures: string[];

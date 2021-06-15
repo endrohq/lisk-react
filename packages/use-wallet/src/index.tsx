@@ -31,7 +31,9 @@ interface Props {
 
 export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
   const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
-  const { client } = useClient({ endpoint: networkEndpoint });
+  const { client, reInitializeClient } = useClient({
+    endpoint: networkEndpoint,
+  });
 
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [wallet, setWallet] = useState<{
@@ -49,9 +51,8 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
         processUpdatedAccountOnNewBlock(client, wallet?.account);
         setSubscribed(true);
       } else {
-        client.disconnect();
-        client.init();
-        processUpdatedAccountOnNewBlock(client, wallet?.account);
+        setSubscribed(false);
+        reInitializeClient();
       }
     }
   }, [client, wallet?.account?.address]);

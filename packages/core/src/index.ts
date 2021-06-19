@@ -1,6 +1,6 @@
 export { Api } from "./api/index";
-export { setupWsClient } from "./client";
 export { normalize } from "./utils/object.utils";
+export { useInterval } from "./hooks/useInterval";
 export {
   getAccountByPassphrase,
   normalizeAccount,

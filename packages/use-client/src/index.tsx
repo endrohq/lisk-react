@@ -4,9 +4,10 @@
  * @param {Array<any>} dependencies
  */
 import React, { FC, useContext, useMemo, useEffect, useState } from "react";
+import { createWSClient } from "@liskhq/lisk-api-client";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 import { LiskNetwork, NetworkEndpoint } from "@lisk-react/types";
-import { setupWsClient } from "@lisk-react/core";
+import { useInterval } from "@lisk-react/core";
 
 export interface LiskClientContextStateProps {
   network: LiskNetwork;
@@ -40,13 +41,21 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
   async function setupClient() {
     try {
       if (endpoint?.wsUrl) {
-        const wsClient = await setupWsClient(endpoint.wsUrl);
+        const wsClient = await createWSClient(endpoint?.wsUrl);
         setClient(wsClient);
+        setIsConnected(true);
       }
     } catch (error) {
       console.warn("Lisk client can't connect with the given endpoint");
     }
   }
+
+  useInterval(
+    () => {
+      setupClient();
+    },
+    !isConnected ? 1000 : null
+  );
 
   useEffect(() => {
     async function fetchOnClientInit() {

@@ -21,7 +21,8 @@
     "@lisk-react/core": "^0.5.1",
     "@lisk-react/types": "^0.5.1",
     "@lisk-react/use-client": "^0.5.1",
-    "@lisk-react/use-wallet": "^0.5.1"
+    "@lisk-react/use-wallet": "^0.5.1",
+    "@lisk-react/use-block": "^0.5.1"
   },
   "scripts": {
     "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",

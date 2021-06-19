@@ -7,33 +7,28 @@ import {
 } from "@lisk-react/types";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 import {
-  useClient,
   normalizeAccount,
   createAccount,
   getAccountByPassphrase,
   normalize,
 } from "@lisk-react/core";
+import { LiskClientProvider, useClient } from "@lisk-react/use-client";
 
-export interface LiskWalletContextStateProps extends Wallet {
-  setEndpoint(endpoint?: NetworkEndpoint): void;
-}
+export interface LiskWalletContextStateProps extends Wallet {}
 
 export const LiskWalletContext =
   React.createContext<LiskWalletContextStateProps>(
     {} as LiskWalletContextStateProps
   );
 
-export const useLiskWallet = () => useContext(LiskWalletContext);
+export const useWallet = () => useContext(LiskWalletContext);
 
 interface Props {
   endpoint?: NetworkEndpoint;
 }
 
-export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
-  const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
-  const { client, reInitializeClient } = useClient({
-    endpoint: networkEndpoint,
-  });
+export const LiskWalletWhiteLabelProvider: FC<Props> = ({ children }) => {
+  const { client } = useClient();
 
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [wallet, setWallet] = useState<{
@@ -42,17 +37,12 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
   }>({ account: undefined, walletType: WalletType.LOCAL });
 
   useEffect(() => {
-    if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);
-  }, [endpoint]);
-
-  useEffect(() => {
     if (client && wallet.account?.address) {
       if (!subscribed) {
         processUpdatedAccountOnNewBlock(client, wallet?.account);
         setSubscribed(true);
       } else {
         setSubscribed(false);
-        reInitializeClient();
       }
     }
   }, [client, wallet?.account?.address]);
@@ -117,14 +107,24 @@ export const LiskWalletProvider: FC<Props> = ({ endpoint, children }) => {
       account: wallet.account,
       walletType: wallet.walletType,
       generate: () => createAccount(),
-      setEndpoint: (endpoint: NetworkEndpoint) => setNetworkEndpoint(endpoint),
     }),
-    [endpoint, wallet.account, client]
+    [wallet.account, client]
   );
 
   return (
     <LiskWalletContext.Provider value={value}>
       {children}
     </LiskWalletContext.Provider>
+  );
+};
+
+export const LiskWalletProvider: React.FC<{ endpoint?: NetworkEndpoint }> = ({
+  endpoint,
+  children,
+}) => {
+  return (
+    <LiskClientProvider endpoint={endpoint}>
+      <LiskWalletWhiteLabelProvider>{children}</LiskWalletWhiteLabelProvider>
+    </LiskClientProvider>
   );
 };

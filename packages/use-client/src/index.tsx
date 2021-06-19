@@ -5,18 +5,11 @@
  */
 import React, { FC, useContext, useMemo, useEffect, useState } from "react";
 import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
-import {
-  Block,
-  LiskNetwork,
-  NetworkEndpoint,
-  LiskAccount,
-} from "@lisk-react/types";
-import { useClient, zeroHeightBlock, normalize } from "@lisk-react/core";
+import { LiskNetwork, NetworkEndpoint } from "@lisk-react/types";
+import { setupWsClient } from "@lisk-react/core";
 
 export interface LiskClientContextStateProps {
   network: LiskNetwork;
-  block: Block;
-  accounts: LiskAccount[];
   client?: APIClient;
 }
 
@@ -25,79 +18,55 @@ export const LiskClientContext =
     {} as LiskClientContextStateProps
   );
 
-export const useLiskClient = () => useContext(LiskClientContext);
+export const useClient = () => useContext(LiskClientContext);
 
 interface Props {
   endpoint?: NetworkEndpoint;
 }
 
 export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
-  const [networkEndpoint, setNetworkEndpoint] = useState<NetworkEndpoint>();
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [subscribed, setSubscribed] = useState<boolean>(false);
-  const [block, setBlock] =
-    useState<{ block: Block; accounts: LiskAccount[] }>(zeroHeightBlock);
-  const { client } = useClient({ endpoint: networkEndpoint });
+  const [client, setClient] = useState<APIClient>();
+
+  useEffect(() => {
+    setupClient();
+    return () => {
+      client?.disconnect();
+      setClient(undefined);
+    };
+  }, [endpoint]);
+
+  async function setupClient() {
+    try {
+      if (endpoint?.wsUrl) {
+        const wsClient = await setupWsClient(endpoint.wsUrl);
+        setClient(wsClient);
+      }
+    } catch (error) {
+      console.warn("Lisk client can't connect with the given endpoint");
+    }
+  }
 
   useEffect(() => {
     async function fetchOnClientInit() {
       if (client && !subscribed) {
-        await fetchLatestBlock();
         client.subscribe("app:shutdown", () => setIsConnected(false));
-        client.subscribe("app:block:new", persistNewBlock);
         setSubscribed(true);
       }
     }
     fetchOnClientInit();
   }, [client]);
 
-  async function fetchLatestBlock() {
-    try {
-      if (!client) return;
-      const block = (await client?.invoke("app:getLastBlock")) as string;
-      if (!block) return;
-      // Decode block
-      const decodedBlock = client.block.decode(block);
-      const convertedBlock = normalize(decodedBlock) as Block;
-      setIsConnected(true);
-      setBlock({ block: convertedBlock, accounts: [] });
-    } catch (error) {}
-  }
-
-  function persistNewBlock({ block, accounts }: any) {
-    if (!client) return;
-
-    if (!isConnected) {
-      setIsConnected(true);
-    }
-    // Decode block
-    const decodedBlock = client.block.decode(block);
-    const convertedBlock = normalize(decodedBlock) as Block;
-
-    // Decode related accounts
-    const convertedAccounts = accounts?.map((item) => {
-      const decodedAccount = client.account.decode(item);
-      return normalize(decodedAccount);
-    });
-    setBlock({ block: convertedBlock, accounts: convertedAccounts });
-  }
-
-  useEffect(() => {
-    if (endpoint?.wsUrl) setNetworkEndpoint(endpoint);
-  }, [endpoint]);
-
   const value = useMemo(
     () => ({
-      block: block.block,
-      accounts: block.accounts,
       network: {
         isConnected,
         endpoint,
       },
       client,
-      setEndpoint: (endpoint: NetworkEndpoint) => setNetworkEndpoint(endpoint),
     }),
-    [block, isConnected]
+    [client, isConnected]
   );
 
   return (

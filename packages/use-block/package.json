@@ -1,11 +1,8 @@
 {
-  "name": "@lisk-react/use-wallet",
+  "name": "@lisk-react/use-block",
   "version": "0.5.1",
-  "description": "An easy-to-use React ContextProvider for to authenticate users in the Lisk ecosystem",
+  "description": "An easy-to-use React ContextProvider for the Lisk client library",
   "author": "Endro <tom@endro.io>",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "lisk",
     "react",
@@ -19,18 +16,22 @@
   ],
   "dependencies": {
     "@lisk-react/core": "^0.5.1",
-    "@lisk-react/types": "^0.5.1",
-    "@lisk-react/use-client": "^0.5.1"
+    "@lisk-react/use-client": "^0.5.1",
+    "@lisk-react/types": "^0.5.1"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "prebuild": "rm -r dist | rm tsconfig.tsbuildinfo | mkdir dist | true",
     "build": "tsc",
     "build:check": "node -e \"require('./dist')\""
   },
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/endrohq/lisk-react.git"

@@ -7,6 +7,7 @@ import React, { FC, useContext, useMemo, useEffect, useState } from "react";
 import { Block, LiskAccount, NetworkEndpoint } from "@lisk-react/types";
 import { zeroHeightBlock, normalize } from "@lisk-react/core";
 import { useClient, LiskClientProvider } from "@lisk-react/use-client";
+import { Buffer } from "@liskhq/lisk-client";
 import { NewBlock } from "./types";
 
 export interface LiskBlockContextStateProps {
@@ -42,7 +43,7 @@ export const LiskBlockWhiteLabelProvider: FC = ({ children }) => {
       const block = (await client?.invoke("app:getLastBlock")) as string;
       if (!block) return;
       // Decode block
-      const decodedBlock = client.block.decode(block);
+      const decodedBlock = client.block.decode(Buffer.from(block, "hex"));
       const convertedBlock = normalize(decodedBlock) as Block;
       setBlock({ block: convertedBlock, accounts: [] });
     } catch (error) {}
@@ -51,12 +52,12 @@ export const LiskBlockWhiteLabelProvider: FC = ({ children }) => {
   function persistNewBlock({ block, accounts }: any) {
     if (!client) return;
     // Decode block
-    const decodedBlock = client.block.decode(block as string);
+    const decodedBlock = client.block.decode(Buffer.from(block, "hex"));
     const convertedBlock = normalize(decodedBlock) as Block;
 
     // Decode related accounts
     const convertedAccounts = accounts?.map((item) => {
-      const decodedAccount = client.account.decode(item as string);
+      const decodedAccount = client.account.decode(Buffer.from(item, "hex"));
       return normalize(decodedAccount);
     });
     setBlock({ block: convertedBlock, accounts: convertedAccounts });

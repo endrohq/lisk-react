@@ -5,7 +5,6 @@ import {
   Wallet,
   WalletType,
 } from "@lisk-react/types";
-import { APIClient } from "@liskhq/lisk-api-client/dist-node/api_client";
 import {
   normalizeAccount,
   createAccount,
@@ -14,20 +13,11 @@ import {
 } from "@lisk-react/core";
 import { LiskClientProvider, useClient } from "@lisk-react/use-client";
 
-export interface LiskWalletContextStateProps extends Wallet {}
-
-export const LiskWalletContext =
-  React.createContext<LiskWalletContextStateProps>(
-    {} as LiskWalletContextStateProps
-  );
+export const LiskWalletContext = React.createContext<Wallet>({} as Wallet);
 
 export const useWallet = () => useContext(LiskWalletContext);
 
-interface Props {
-  endpoint?: NetworkEndpoint;
-}
-
-export const LiskWalletWhiteLabelProvider: FC<Props> = ({ children }) => {
+export const LiskWalletWhiteLabelProvider: FC = ({ children }) => {
   const { client } = useClient();
 
   const [subscribed, setSubscribed] = useState<boolean>(false);
@@ -39,32 +29,28 @@ export const LiskWalletWhiteLabelProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     if (client && wallet.account?.address) {
       if (!subscribed) {
-        processUpdatedAccountOnNewBlock(client, wallet?.account);
+        client.subscribe("app:block:new", ({ accounts }: any) => {
+          const normalized = accounts?.map((item) => {
+            const decodedAccount = client.account.decode(item);
+            return normalize(decodedAccount) as LiskAccount;
+          });
+          const updatedAccount = normalized?.find(
+            (acc) => acc.address === wallet?.account?.address
+          );
+          if (!!updatedAccount) {
+            const acc = normalizeAccount(
+              updatedAccount,
+              wallet?.account?.passphrase
+            );
+            setWallet({ account: acc, walletType: WalletType.BLOCKCHAIN });
+          }
+        });
         setSubscribed(true);
       } else {
         setSubscribed(false);
       }
     }
   }, [client, wallet?.account?.address]);
-
-  function processUpdatedAccountOnNewBlock(
-    client: APIClient,
-    activeAccount: LiskAccount
-  ) {
-    client.subscribe("app:block:new", ({ accounts }: any) => {
-      const normalized = accounts?.map((item) => {
-        const decodedAccount = client.account.decode(item);
-        return normalize(decodedAccount) as LiskAccount;
-      });
-      const updatedAccount = normalized?.find(
-        (acc) => acc.address === activeAccount.address
-      );
-      if (!!updatedAccount) {
-        const acc = normalizeAccount(updatedAccount, activeAccount.passphrase);
-        setWallet({ account: acc, walletType: WalletType.BLOCKCHAIN });
-      }
-    });
-  }
 
   async function authenticate(passphrase: string): Promise<void> {
     const account = getAccountByPassphrase(passphrase);

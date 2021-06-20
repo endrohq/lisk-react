@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/use-client",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "An easy-to-use React ContextProvider for the Lisk client library",
   "author": "Endro <tom@endro.io>",
   "keywords": [

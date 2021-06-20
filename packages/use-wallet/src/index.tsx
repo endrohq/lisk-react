@@ -11,6 +11,7 @@ import {
   getAccountByPassphrase,
   normalize,
 } from "@lisk-react/core";
+import { Buffer } from "@liskhq/lisk-client";
 import { LiskClientProvider, useClient } from "@lisk-react/use-client";
 
 export const LiskWalletContext = React.createContext<Wallet>({} as Wallet);
@@ -18,7 +19,10 @@ export const LiskWalletContext = React.createContext<Wallet>({} as Wallet);
 export const useWallet = () => useContext(LiskWalletContext);
 
 export const LiskWalletWhiteLabelProvider: FC = ({ children }) => {
-  const { client } = useClient();
+  const {
+    client,
+    network: { isConnected },
+  } = useClient();
 
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [wallet, setWallet] = useState<{
@@ -27,11 +31,15 @@ export const LiskWalletWhiteLabelProvider: FC = ({ children }) => {
   }>({ account: undefined, walletType: WalletType.LOCAL });
 
   useEffect(() => {
-    if (client && wallet.account?.address) {
+    if (!isConnected) {
+      setSubscribed(false);
+    } else if (client && wallet.account?.address) {
       if (!subscribed) {
         client.subscribe("app:block:new", ({ accounts }: any) => {
           const normalized = accounts?.map((item) => {
-            const decodedAccount = client.account.decode(item);
+            const decodedAccount = client.account.decode(
+              Buffer.from(item, "hex")
+            );
             return normalize(decodedAccount) as LiskAccount;
           });
           const updatedAccount = normalized?.find(

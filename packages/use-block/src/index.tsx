@@ -22,20 +22,25 @@ export const LiskBlockContext = React.createContext<LiskBlockContextStateProps>(
 export const useBlock = () => useContext(LiskBlockContext);
 
 export const LiskBlockWhiteLabelProvider: FC = ({ children }) => {
-  const { client } = useClient();
+  const {
+    client,
+    network: { isConnected },
+  } = useClient();
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [block, setBlock] = useState<NewBlock>(zeroHeightBlock);
 
   useEffect(() => {
     async function fetchOnClientInit() {
-      if (client && !subscribed) {
+      if (!isConnected) {
+        setSubscribed(false);
+      } else if (client && !subscribed) {
         await fetchLatestBlock();
         client.subscribe("app:block:new", persistNewBlock);
         setSubscribed(true);
       }
     }
     fetchOnClientInit();
-  }, [client]);
+  }, [isConnected, client]);
 
   async function fetchLatestBlock() {
     try {

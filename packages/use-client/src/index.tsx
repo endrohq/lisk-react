@@ -54,7 +54,7 @@ export const LiskClientProvider: FC<Props> = ({ children, endpoint }) => {
     () => {
       setupClient();
     },
-    !isConnected ? 1000 : null
+    !isConnected && subscribed ? 2000 : null
   );
 
   useEffect(() => {

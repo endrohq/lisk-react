@@ -15,6 +15,7 @@
     "dapp"
   ],
   "dependencies": {
+    "@liskhq/lisk-client": "5.1.1",
     "@lisk-react/types": "^0.6.0",
     "bignumber.js": "^9.0.1"
   },

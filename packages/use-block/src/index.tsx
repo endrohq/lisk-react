@@ -20,11 +20,8 @@ export const LiskBlockContext = React.createContext<LiskBlockContextStateProps>(
 
 export const useBlock = () => useContext(LiskBlockContext);
 
-interface Props {}
-
-export const LiskBlockWhiteLabelProvider: FC<Props> = ({ children }) => {
+export const LiskBlockWhiteLabelProvider: FC = ({ children }) => {
   const { client } = useClient();
-  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [subscribed, setSubscribed] = useState<boolean>(false);
   const [block, setBlock] = useState<NewBlock>(zeroHeightBlock);
 
@@ -47,24 +44,19 @@ export const LiskBlockWhiteLabelProvider: FC<Props> = ({ children }) => {
       // Decode block
       const decodedBlock = client.block.decode(block);
       const convertedBlock = normalize(decodedBlock) as Block;
-      setIsConnected(true);
       setBlock({ block: convertedBlock, accounts: [] });
     } catch (error) {}
   }
 
   function persistNewBlock({ block, accounts }: any) {
     if (!client) return;
-
-    if (!isConnected) {
-      setIsConnected(true);
-    }
     // Decode block
-    const decodedBlock = client.block.decode(block);
+    const decodedBlock = client.block.decode(block as string);
     const convertedBlock = normalize(decodedBlock) as Block;
 
     // Decode related accounts
     const convertedAccounts = accounts?.map((item) => {
-      const decodedAccount = client.account.decode(item);
+      const decodedAccount = client.account.decode(item as string);
       return normalize(decodedAccount);
     });
     setBlock({ block: convertedBlock, accounts: convertedAccounts });
@@ -75,7 +67,7 @@ export const LiskBlockWhiteLabelProvider: FC<Props> = ({ children }) => {
       block: block.block,
       accounts: block.accounts,
     }),
-    [block, isConnected]
+    [block]
   );
 
   return (

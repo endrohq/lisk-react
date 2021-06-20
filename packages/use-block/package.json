@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/use-block",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "An easy-to-use React ContextProvider for the Lisk client library",
   "author": "Endro <tom@endro.io>",
   "keywords": [
@@ -15,9 +15,9 @@
     "dapp"
   ],
   "dependencies": {
-    "@lisk-react/core": "^0.6.3",
+    "@lisk-react/core": "^0.6.5",
     "@lisk-react/types": "^0.6.0",
-    "@lisk-react/use-client": "^0.6.4"
+    "@lisk-react/use-client": "^0.6.5"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -16,8 +16,7 @@
   ],
   "dependencies": {
     "@lisk-react/core": "^0.6.1",
-    "@lisk-react/types": "^0.6.0",
-    "@liskhq/lisk-client": "5.1.1"
+    "@lisk-react/types": "^0.6.0"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

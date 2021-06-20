@@ -1,6 +1,6 @@
 {
   "name": "@lisk-react/core",
-  "version": "0.6.1",
+  "version": "0.6.3",
   "description": "The core library behind lisk-react",
   "author": "Endro <tom@endro.io>",
   "keywords": [
@@ -15,8 +15,8 @@
     "dapp"
   ],
   "dependencies": {
-    "@liskhq/lisk-client": "5.1.1",
     "@lisk-react/types": "^0.6.0",
+    "@liskhq/lisk-client": "5.1.1",
     "bignumber.js": "^9.0.1"
   },
   "main": "dist/index.js",

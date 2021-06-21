@@ -33,10 +33,11 @@ useLiskClient can be called from within any function component to access context
 
 #### Example
 ```javascript
-import { useLiskClient } from '@lisk-react/use-lisk'
+import { useClient } from '@lisk-react/use-lisk'
 
 function Component () {
-  const { block, accounts, network: { isConnected, endpoint } } = useLiskClient()
+  const { network: { isConnected, endpoint } } = useClient()
+  const { block, accounts } = useBlock()
   // ...
 }
 ```
@@ -44,9 +45,7 @@ function Component () {
 The hook returns to the following interface:
 
 ```typescript
-interface UseLiskClientProps {
-  block: Block // The latest decoded block produced by the blockchain
-  accounts: LiskAccount[] // All decoded accounts involved in the last block
+interface UseClientProps {
   network?: {
       isConnected: boolean // Indicator if LiskProvider is connected with the blockchain
       endpoint: { // Your given endpoints to LiskProvider
@@ -56,15 +55,15 @@ interface UseLiskClientProps {
   }
 }
 ```
-### useLiskWallet
-useLiskWallet can be called from within any function component to access context variables such as `isAuthenicated`, `authenticate`, `generateAccount` or `logout`
+### useWallet
+useWallet can be called from within any function component to access context variables such as `isAuthenicated`, `authenticate`, `generateAccount` or `logout`
 
 #### Example
 ```javascript
-import { useLiskWallet } from '@lisk-react/use-lisk'
+import { useWallet } from '@lisk-react/use-lisk'
 
 function Component () {
-  const { authenticate, isAuthenicated } = useLiskWallet()
+  const { authenticate, isAuthenicated } = useWallet()
   // ...
 }
 ```
@@ -72,7 +71,7 @@ function Component () {
 The hook returns to the following interface:
 
 ```typescript
-interface UseLiskWalletProps {
+interface UseWalletProps {
     account?: LiskAccount; // An up-to-date account when authenticated
     isAuthenticated: boolean; // indicator if the user is authenticated
     loading: boolean; // A state transition between authenticating and fetching the blockchain state
@@ -80,6 +79,26 @@ interface UseLiskWalletProps {
     logout(): void; // A reset function for the wallet
     setAccount(account: LiskAccount): void; // Persisting a generated account in the wallet
     authenticate(passphrase: string): void; // Authenticating the user via a given passphrase
+}
+```
+```
+### useBlock
+useBlock can be called from within any function component to access the most recent blocks with their involved accounts
+
+#### Example
+```javascript
+import { useBlock } from '@lisk-react/use-lisk'
+
+function Component () {
+  const { block, accounts } = useBlock()
+  // ...
+}
+The hook returns to the following interface:
+
+```typescript
+interface UseWalletProps {
+  block: Block // The latest decoded block produced by the blockchain
+  accounts: LiskAccount[] // All decoded accounts involved in the last block
 }
 ```
 ## @lisk-react/use-wallet
@@ -106,7 +125,7 @@ useLiskWallet can be called from within any function component to access context
 import { useLiskWallet } from '@lisk-react/use-wallet'
 
 function Component () {
-  const { authenticate, isAuthenicated } = useLiskWallet()
+  const { authenticate, isAuthenticated } = useLiskWallet()
   // ...
 }
 ```

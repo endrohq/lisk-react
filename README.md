@@ -81,7 +81,6 @@ interface UseWalletProps {
     authenticate(passphrase: string): void; // Authenticating the user via a given passphrase
 }
 ```
-```
 ### useBlock
 useBlock can be called from within any function component to access the most recent blocks with their involved accounts
 

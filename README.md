@@ -28,8 +28,8 @@ function App () {
 ```
 LiskProvider brings you out of the box websocket connection, a wallet to authenticate the user and an up-to-date LiskAPIClient with all of the components listening to your given endpoints at the start.
 
-### useLiskClient
-useLiskClient can be called from within any function component to access context variables such as `isConnected`, `setTargetNetwork` or `block`
+### useClient
+useClient can be called from within any function component to access context variables such as `isConnected`, `setTargetNetwork`
 
 #### Example
 ```javascript

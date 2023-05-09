@@ -81,3 +81,5 @@ out
 .npmrc
 
 *.log
+
+.yarn

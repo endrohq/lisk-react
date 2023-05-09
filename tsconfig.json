@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "target": "es2019",
-    "module": "commonjs",
-    "declaration": true,
-    "moduleResolution": "node",
     "newLine": "lf",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
@@ -14,8 +10,8 @@
     "pretty": true,
     "removeComments": true,
     "resolveJsonModule": true,
-    "sourceMap": true,
     "strict": true,
     "jsx": "react"
-  }
+  },
+  "extends": "./tsconfig.base.json"
 }

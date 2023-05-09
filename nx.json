@@ -1,0 +1,63 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/nx-cloud",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"],
+        "accessToken": "YjQ4MjY4NGMtOWYxMS00Zjk0LWJiMDMtNDdiOTc4OTAxNWU3fHJlYWQtd3JpdGU="
+      }
+    }
+  },
+  "targetDefaults": {
+    "test": {
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
+    },
+    "e2e": {
+      "inputs": ["default", "^production"]
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+    }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/.eslintrc.json"
+    ],
+    "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "unitTestRunner": "jest",
+        "linter": "eslint",
+        "babel": true
+      },
+      "library": {
+        "unitTestRunner": "jest",
+        "linter": "eslint"
+      }
+    },
+    "@nx/react": {
+      "application": {
+        "style": "css",
+        "linter": "eslint",
+        "bundler": "rspack",
+        "babel": true
+      },
+      "component": {
+        "style": "css"
+      },
+      "library": {
+        "style": "css",
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "showcase"
+}
